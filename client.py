@@ -17,7 +17,7 @@ def hello():
 
 @app.route("/status")
 def status():
-
+	return "status"
 
 @app.route("/toggle/<int:pin_out>")
 def toggle_pin(pin_out):
@@ -25,7 +25,7 @@ def toggle_pin(pin_out):
 		return 'invalid pin specified'
 
 
-	GPIO.output(pin_out)
+	# GPIO.output(pin_out)
 
 
 if __name__ == "__main__":

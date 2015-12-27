@@ -32,6 +32,8 @@ class RaspGPIO(AmpGPIO):
 			import RPi.GPIO as GPIO
 
 			GPIO.setmode(GPIO.BCM)
+			GPIO.setup(21, GPIO.OUT)
+			GPIO.output(21, GPIO.LOW)
 
 		except ImportError as e:
 			print "Failed to import RPI, are you sure you are on the pi?"

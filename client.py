@@ -1,6 +1,7 @@
 import yaml
 
 from flask import Flask
+from decorators import activity_led
 from gpio import InvalidRaspberryPiEnvironment
 from gpio import RaspGPIO
 from gpio import UnixGPIO
@@ -8,7 +9,9 @@ from gpio import UnixGPIO
 from sys import argv
 
 
-ALLOWED_PINS = [21, 26]
+OUTLET_STATE_PIN = 26
+ACTIVITY_PIN = 21
+
 pi_client = None
 
 def pi_initialization(environment):
@@ -22,22 +25,21 @@ def pi_initialization(environment):
 # initialize the world here:
 app = Flask(__name__)
 
-@app.route("/")
-def hello():
-	return "Hello World!"
-
-
 @app.route("/status")
 def status():
 	return str(server_conf['server_id'])
 
 @app.route("/toggle/<int:pin_out>")
 def toggle_pin(pin_out):
-	if pin_out not in ALLOWED_PINS:
-		return 'invalid pin specified'
 
 	pi_client.setup(pin_out, pi_client.OUTPUT)
 
+	return "done"
+
+@app.route("/toggle/on")
+@activity_led()
+def on():
+	# turn on output status pin
 	return "done"
 
 if __name__ == "__main__":

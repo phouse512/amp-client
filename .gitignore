@@ -2,3 +2,4 @@
 *.pyc
 conf/client_conf.yml
 conf/master_conf.yml
+conf/pin_conf.yml

@@ -2,7 +2,7 @@ import yaml
 
 from flask import Flask
 from flask import jsonify
-from decorators import activity_led
+from commons import activity_led
 from gpio import InvalidRaspberryPiEnvironment
 from gpio import RaspGPIO
 from gpio import UnixGPIO
@@ -17,6 +17,7 @@ ACTIVITY_PIN = 21
 
 pi_client = None
 
+
 def pi_initialization(environment):
 	print "mocking the setup of GPIO pins"
 	if environment == 'dev':
@@ -28,13 +29,14 @@ def pi_initialization(environment):
 # initialize the world here:
 app = Flask(__name__)
 
+
 @app.route("/status")
 def status():
-	return str(server_conf['server_id'])
+	return jsonify(client_id=server_conf['server_id'])
 
 
 @app.route("/toggle/on")
-@activity_led()
+@activity_led(pi_client)
 def on():
 	# turn on output status pin
 	response = {}
@@ -48,7 +50,7 @@ def on():
 
 
 @app.route("/toggle/off")
-@activity_led()
+@activity_led(pi_client)
 def off():
 	# turn on output status pin
 	response = {}

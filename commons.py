@@ -1,5 +1,7 @@
 from functools import wraps
 from client import ACTIVITY_PIN
+from gpio import AmpGPIO
+
 
 def activity_led(amper_gpio):
 	def decorator(f):

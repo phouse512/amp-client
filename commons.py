@@ -1,15 +1,13 @@
 from functools import wraps
-from client import ACTIVITY_PIN
-from gpio import AmpGPIO
 
 
-def activity_led(amper_gpio):
+def activity_led(amper_gpio, activity_pin):
 	def decorator(f):
 		@wraps(f)
 		def decorated_function(*args, **kwargs):
-			amper_gpio.output(ACTIVITY_PIN, amper_gpio.HIGH)
+			amper_gpio.set_output_pin(activity_pin, amper_gpio.HIGH)
 			rv = f(*args, **kwargs)
-			amper_gpio.output(ACTIVITY_PIN, amper_gpio.LOW)
+			amper_gpio.set_output_pin(activity_pin, amper_gpio.LOW)
 			return rv
 		return decorated_function
 	return decorator

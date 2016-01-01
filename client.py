@@ -1,4 +1,5 @@
 import yaml
+from sys import argv
 
 from flask import Flask
 from flask import jsonify
@@ -9,12 +10,9 @@ from gpio import UnixGPIO
 from status import SET_STATUS_FAILURE
 from status import SET_STATUS_SUCCESS
 
-from sys import argv
 
-
-OUTLET_STATE_PIN = 26
-ACTIVITY_PIN = 21
-
+OUTLET_STATE_PIN = None
+ACTIVITY_PIN = None
 pi_client = None
 
 
@@ -36,7 +34,7 @@ def status():
 
 
 @app.route("/toggle/on")
-@activity_led(pi_client)
+@activity_led(pi_client, ACTIVITY_PIN)
 def on():
 	# turn on output status pin
 	response = {}
@@ -50,7 +48,7 @@ def on():
 
 
 @app.route("/toggle/off")
-@activity_led(pi_client)
+@activity_led(pi_client, ACTIVITY_PIN)
 def off():
 	# turn on output status pin
 	response = {}
@@ -67,6 +65,11 @@ if __name__ == "__main__":
 		script, environment = argv
 		# initialize pi client
 		pi_client = pi_initialization(environment)
+
+		with open("conf/pin_conf.yml", 'r') as stream:
+			pin_conf = yaml.load(stream)
+			ACTIVITY_PIN = int(pin_conf['activity_pin'])
+			OUTLET_STATE_PIN = int(pin_conf['output_pin'])
 
 		# initialize pins for output on pi
 		pi_client.setup(OUTLET_STATE_PIN, pi_client.OUTPUT)

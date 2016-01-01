@@ -11,3 +11,13 @@ def activity_led(amper_gpio):
 			return rv
 		return decorated_function
 	return decorator
+
+
+def auth():
+	def decorator(f):
+		@wraps(f)
+		def decorated_function(*args, **kwargs):
+			rv = f(*args, **kwargs)
+			return rv
+		return decorated_function
+	return decorator

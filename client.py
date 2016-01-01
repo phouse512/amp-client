@@ -1,10 +1,13 @@
 import yaml
 
 from flask import Flask
+from flask import jsonify
 from decorators import activity_led
 from gpio import InvalidRaspberryPiEnvironment
 from gpio import RaspGPIO
 from gpio import UnixGPIO
+from status import SET_STATUS_FAILURE
+from status import SET_STATUS_SUCCESS
 
 from sys import argv
 
@@ -29,25 +32,45 @@ app = Flask(__name__)
 def status():
 	return str(server_conf['server_id'])
 
-@app.route("/toggle/<int:pin_out>")
-def toggle_pin(pin_out):
-
-	pi_client.setup(pin_out, pi_client.OUTPUT)
-
-	return "done"
 
 @app.route("/toggle/on")
 @activity_led()
 def on():
 	# turn on output status pin
-	return "done"
+	response = {}
+	try:
+		pi_client.set_output_pin(OUTLET_STATE_PIN, pi_client.LOW)
+		response['status'] = SET_STATUS_SUCCESS
+		response['data'] = pi_client.LOW
+	except Exception as e:
+		response['status'] = SET_STATUS_FAILURE
+	return jsonify(response)
+
+
+@app.route("/toggle/off")
+@activity_led()
+def off():
+	# turn on output status pin
+	response = {}
+	try:
+		pi_client.set_output_pin(OUTLET_STATE_PIN, pi_client.HIGH)
+		response['status'] = SET_STATUS_SUCCESS
+		response['data'] = pi_client.HIGH
+	except Exception as e:
+		response['status'] = SET_STATUS_FAILURE
+	return jsonify(response)
 
 if __name__ == "__main__":
 	try:
 		script, environment = argv
+		# initialize pi client
 		pi_client = pi_initialization(environment)
 
-		# load from file server id, if not there, create one
+		# initialize pins for output on pi
+		pi_client.setup(OUTLET_STATE_PIN, pi_client.OUTPUT)
+		pi_client.setup(ACTIVITY_PIN, pi_client.OUTPUT)
+
+		# load from file server id, if not there, create one <- not done yet
 		with open("conf/client_conf.yml", 'r') as stream:
 			server_conf = yaml.load(stream)
 

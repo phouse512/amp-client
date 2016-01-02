@@ -13,7 +13,6 @@ from status import SET_STATUS_SUCCESS
 
 OUTLET_STATE_PIN = None
 ACTIVITY_PIN = None
-pi_client = None
 
 
 def pi_initialization(environment):
@@ -28,42 +27,12 @@ def pi_initialization(environment):
 app = Flask(__name__)
 
 
-@app.route("/status")
-def status():
-	return jsonify(client_id=server_conf['server_id'])
-
-
-@app.route("/toggle/on")
-@activity_led(pi_client, ACTIVITY_PIN)
-def on():
-	# turn on output status pin
-	response = {}
-	try:
-		pi_client.set_output_pin(OUTLET_STATE_PIN, pi_client.LOW)
-		response['status'] = SET_STATUS_SUCCESS
-		response['data'] = pi_client.LOW
-	except Exception as e:
-		response['status'] = SET_STATUS_FAILURE
-	return jsonify(response)
-
-
-@app.route("/toggle/off")
-@activity_led(pi_client, ACTIVITY_PIN)
-def off():
-	# turn on output status pin
-	response = {}
-	try:
-		pi_client.set_output_pin(OUTLET_STATE_PIN, pi_client.HIGH)
-		response['status'] = SET_STATUS_SUCCESS
-		response['data'] = pi_client.HIGH
-	except Exception as e:
-		response['status'] = SET_STATUS_FAILURE
-	return jsonify(response)
-
+# server setup: todo - write better code here
 if __name__ == "__main__":
 	try:
 		script, environment = argv
 		# initialize pi client
+		global pi_client
 		pi_client = pi_initialization(environment)
 
 		with open("conf/pin_conf.yml", 'r') as stream:
@@ -91,3 +60,37 @@ if __name__ == "__main__":
 
 
 # TODO: add methods to handle GPIO cleanup
+
+@app.route("/status")
+def status():
+	return jsonify(client_id=server_conf['server_id'])
+
+
+@app.route("/toggle/on")
+@activity_led(pi_client, ACTIVITY_PIN)
+def on():
+	# turn on output status pin
+	response = {}
+	try:
+		pi_client.set_output_pin(OUTLET_STATE_PIN, pi_client.HIGH)
+		response['status'] = SET_STATUS_SUCCESS
+		response['data'] = pi_client.HIGH
+	except Exception as e:
+		response['status'] = SET_STATUS_FAILURE
+	return jsonify(response)
+
+
+@app.route("/toggle/off")
+@activity_led(pi_client, ACTIVITY_PIN)
+def off():
+	# turn on output status pin
+	response = {}
+	try:
+		pi_client.set_output_pin(OUTLET_STATE_PIN, pi_client.LOW)
+		response['status'] = SET_STATUS_SUCCESS
+		response['data'] = pi_client.LOW
+	except Exception as e:
+		response['status'] = SET_STATUS_FAILURE
+	return jsonify(response)
+
+

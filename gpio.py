@@ -32,6 +32,8 @@ class RaspGPIO(AmpGPIO):
 			import RPi.GPIO as GPIO
 
 			GPIO.setmode(GPIO.BCM)
+			
+			# this bad.. don't forget to abstract pin specific calls out of this class
 			GPIO.setup(21, GPIO.OUT)
 			GPIO.output(21, GPIO.LOW)
 

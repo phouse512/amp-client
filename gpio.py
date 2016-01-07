@@ -28,6 +28,7 @@ class AmpGPIO(object):
 class RaspGPIO(AmpGPIO):
 
 	def __init__(self):
+		print "ma"
 		try:
 			import RPi.GPIO as GPIO
 

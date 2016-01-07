@@ -1,6 +1,14 @@
 # An abstraction built on top the python RPi.GPIO library, so that we can
 # 	run, test, and build on a local environment
 
+from commons import InvalidRaspberryPiEnvironment
+
+try:
+	import RPi.GPIO as GPIO
+
+except ImportError as e:
+	print "Failed to import RPI, are you sure you are on the pi?"
+
 # abstract class
 class AmpGPIO(object):
 
@@ -29,18 +37,18 @@ class RaspGPIO(AmpGPIO):
 
 	def __init__(self):
 		print "ma"
-		try:
-			import RPi.GPIO as GPIO
-
-			GPIO.setmode(GPIO.BCM)
-			
-			# this bad.. don't forget to abstract pin specific calls out of this class
-			GPIO.setup(21, GPIO.OUT)
-			GPIO.output(21, GPIO.LOW)
-
-		except ImportError as e:
-			print "Failed to import RPI, are you sure you are on the pi?"
-			raise InvalidRaspberryPiEnvironment("invalid raspberry pi environment")
+		# try:
+		# 	import RPi.GPIO as GPIO
+		#
+		# 	GPIO.setmode(GPIO.BCM)
+		#
+		# 	# this bad.. don't forget to abstract pin specific calls out of this class
+		# 	GPIO.setup(21, GPIO.OUT)
+		# 	GPIO.output(21, GPIO.LOW)
+		#
+		# except ImportError as e:
+		# 	print "Failed to import RPI, are you sure you are on the pi?"
+		# 	raise InvalidRaspberryPiEnvironment("invalid raspberry pi environment")
 
 	def set_output_pin(self, pin, level):
 
@@ -81,6 +89,4 @@ class UnixGPIO(AmpGPIO):
 		print "mocking cleaning up."
 
 
-class InvalidRaspberryPiEnvironment(Exception):
-	""" Exception raised when client is run on any non-raspberry pi environment """
-	pass
+

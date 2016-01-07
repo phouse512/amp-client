@@ -31,3 +31,7 @@ def auth():
 			return rv
 		return decorated_function
 	return decorator
+
+class InvalidRaspberryPiEnvironment(Exception):
+	""" Exception raised when client is run on any non-raspberry pi environment """
+	pass

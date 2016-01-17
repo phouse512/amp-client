@@ -9,6 +9,7 @@ try:
 except ImportError as e:
 	print "Failed to import RPI, are you sure you are on the pi?"
 
+
 # abstract class
 class AmpGPIO(object):
 
@@ -21,16 +22,15 @@ class AmpGPIO(object):
 	def __init__(self):
 		raise NotImplementedError("you are attempting to call a method on an abstract class. Please use a concrete one")
 
-
 	def set_output_pin(self, pin, level):
 		raise NotImplementedError("this is an abstract class")
-
 
 	def setup(self, pin, type):
 		raise NotImplementedError("this is an abstract class")
 
 	def cleanup(self):
 		raise NotImplementedError("this is an abstract class")
+
 
 # concrete class that handles when client/master is run on rasp pi
 class RaspGPIO(AmpGPIO):
@@ -40,11 +40,11 @@ class RaspGPIO(AmpGPIO):
 		# try:
 		# 	import RPi.GPIO as GPIO
 		#
-		# 	GPIO.setmode(GPIO.BCM)
+		GPIO.setmode(GPIO.BCM)
 		#
 		# 	# this bad.. don't forget to abstract pin specific calls out of this class
-		# 	GPIO.setup(21, GPIO.OUT)
-		# 	GPIO.output(21, GPIO.LOW)
+		# GPIO.setup(21, GPIO.OUT)
+		# GPIO.output(21, GPIO.LOW)
 		#
 		# except ImportError as e:
 		# 	print "Failed to import RPI, are you sure you are on the pi?"
@@ -59,7 +59,6 @@ class RaspGPIO(AmpGPIO):
 		else:
 			print "failed to set output"
 
-
 	def setup(self, pin, type):
 
 		if type == self.INPUT:
@@ -72,12 +71,12 @@ class RaspGPIO(AmpGPIO):
 	def cleanup(self):
 		GPIO.cleanup()
 
+
 # concrete class that handles when the client is run on a unix environment
 class UnixGPIO(AmpGPIO):
 
 	def __init__(self):
 		print "Unix GPIO, do nothing"
-
 
 	def set_output_pin(self, pin, level):
 		print "pin %s has been set to level: %s" % (str(pin), str(level))

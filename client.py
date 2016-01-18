@@ -51,6 +51,11 @@ def status():
 	return jsonify(client_id=server_conf['server_id'])
 
 
+@app.route("/")
+def ping():
+	return
+
+
 @app.route("/toggle/on")
 # @activity_led(pi_client, ACTIVITY_PIN)
 def on():

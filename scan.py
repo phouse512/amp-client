@@ -11,7 +11,7 @@ CLIENT_PORT = 5031
 def scan_clients(range):
 
 	nm = nmap.PortScanner()
-	nm.scan('10.159.210.*', str(CLIENT_PORT))
+	nm.scan('192.168.1.*', str(CLIENT_PORT))
 
 	hosts_lists = [(x, nm[x]['tcp'][CLIENT_PORT]['state']) for x in nm.all_hosts()]
 

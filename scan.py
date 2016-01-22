@@ -22,7 +22,6 @@ def scan_clients(range):
 			output.append({ 'ip': last_seen_ip, 'port_status': state[1]})
 			last_seen_ip = ""
 
-
 	return output
 
 		# print line
@@ -37,4 +36,4 @@ def scan_clients(range):
 	# 	print host
 
 
-print  scan_clients('range')
+print scan_clients('range')
